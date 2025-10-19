@@ -1,4 +1,5 @@
-#Quiz Sistem Komputer (QuizSiskom) 📝
+# Quiz Sistem Komputer (QuizSiskom) 📝
+
 Ini adalah proyek aplikasi kuis interaktif berbasis web yang dirancang untuk menguji pemahaman siswa mengenai materi Sistem Komputer. Aplikasi ini dibangun menggunakan HTML, CSS, dan JavaScript murni untuk bagian front-end, serta terintegrasi dengan Google Sheets sebagai database melalui Google Apps Script untuk pencatatan skor dan jawaban secara real-time.
 
 ✨ Fitur Utama
