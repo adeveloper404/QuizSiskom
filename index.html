@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Sistem Komputer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        body{font-family:'Poppins',sans-serif;margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2);color:#333}
+        .container{width:100%;max-width:650px;padding:20px}
+        .card{background-color:white;border-radius:15px;padding:30px;box-shadow:0 10px 25px rgba(0,0,0,0.1);display:none;text-align:center}
+        .card.active{display:block}
+        h2{color:#444;margin-top:0}
+        .input-group{margin-bottom:20px;text-align:left}
+        .input-group label{display:block;margin-bottom:8px;font-weight:600}
+        .input-group input,.input-group select{width:100%;padding:12px;border-radius:8px;border:1px solid #ddd;box-sizing:border-box;background-color:white;font-family:'Poppins',sans-serif;font-size:15px}
+        button{width:100%;padding:15px;border:none;border-radius:8px;background-color:#764ba2;color:white;font-size:16px;font-weight:600;cursor:pointer;transition:background-color .3s ease}
+        button:hover{background-color:#663e8a}
+        #quiz-header{margin-bottom:25px}
+        .btn-grid{display:grid;grid-template-columns:1fr;gap:15px;margin-bottom:25px}
+        .answer-btn{padding:15px;border:1px solid #ddd;border-radius:8px;background-color:#f9f9f9;cursor:pointer;text-align:left;transition:background-color .3s ease,border-color .3s ease;color:#333;font-size:15px}
+        .answer-btn:hover{background-color:#f0f0f0}
+        .answer-btn.selected{border-color:#764ba2;background-color:#e9e0f2}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="user-form" class="card active">
+            <h2>Selamat Datang!</h2>
+            <p>Silakan isi data diri untuk memulai kuis.</p>
+            <form id="data-form">
+                <div class="input-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" placeholder="Masukkan nama Anda" required>
+                </div>
+                <div class="input-group">
+                    <label for="kelas">Kelas</label>
+                    <select id="kelas" required>
+                        <option value="" disabled selected>Pilih kelas Anda</option>
+                        <option value="X-M-1">X-M-1</option>
+                        <option value="X-M-2">X-M-2</option>
+                        <option value="X-M-3">X-M-3</option>
+                        <option value="X-M-4">X-M-4</option>
+                        <option value="XI-M-2">XI-M-2</option>
+                        <option value="XII-M-2">XII-M-2</option>
+                        <option value="XII-M-4">XII-M-4</option>
+                    </select>
+                </div>
+                <button type="button" onclick="startQuiz()">Mulai Kuis</button>
+            </form>
+        </div>
+        <div id="quiz-container" class="card">
+            <div class="quiz-header">
+                <h2 id="question">Pertanyaan akan muncul di sini</h2>
+                <p id="progress-text">Soal 1 dari 10</p>
+            </div>
+            <div id="answer-buttons" class="btn-grid"></div>
+            <button id="next-btn" onclick="nextQuestion()">Selanjutnya</button>
+        </div>
+        <div id="result-container" class="card">
+            <h2>Kuis Selesai!</h2>
+            <p id="loading-text">Pengiriman data... Mohon tunggu.</p>
+            <h3 id="score-text">Skor Anda: 0</h3>
+            <p id="details-text">Detail: 0 Benar, 10 Salah</p>
+            <button id="finish-btn" onclick="finishQuiz()" style="display:none;">Selesai</button>
+        </div>
+    </div>
+    <script>
+        const quizData=[{question:"Kesatuan elemen yang saling berhubungan untuk mengolah data menjadi informasi disebut...",answers:[{text:"Perangkat Keras",correct:!1},{text:"Sistem Komputer",correct:!0},{text:"Jaringan Komputer",correct:!1},{text:"Perangkat Lunak",correct:!1}]},{question:"Komponen fisik komputer yang dapat dilihat dan disentuh secara langsung disebut...",answers:[{text:"Software",correct:!1},{text:"Brainware",correct:!1},{text:"Hardware",correct:!0},{text:"Aplikasi",correct:!1}]},{question:"Manakah dari berikut ini yang BUKAN merupakan contoh dari Hardware?",answers:[{text:"CPU (Central Processing Unit)",correct:!1},{text:"Microsoft Windows",correct:!0},{text:"RAM (Random Access Memory)",correct:!1},{text:"Monitor",correct:!1}]},{question:"Fungsi utama dari RAM (Random Access Memory) adalah...",answers:[{text:"Menyimpan data secara permanen bahkan setelah komputer mati",correct:!1},{text:"Menjadi otak komputer yang memproses semua instruksi",correct:!1},{text:"Menyimpan data sementara yang sedang aktif digunakan oleh aplikasi",correct:!0},{text:"Menghubungkan semua komponen di dalam komputer",correct:!1}]},{question:"Sistem Operasi seperti Windows, macOS, dan Linux tergolong sebagai...",answers:[{text:"Hardware",correct:!1},{text:"Software",correct:!0},{text:"Brainware",correct:!1},{text:"Firmware",correct:!1}]},{question:"Seorang profesional yang bertugas menulis kode untuk membuat aplikasi atau program komputer disebut...",answers:[{text:"Administrator Jaringan",correct:!1},{text:"Analis Sistem",correct:!1},{text:"Pengguna Umum",correct:!1},{text:"Programmer",correct:!0}]},{question:"Tanpa adanya Brainware, maka...",answers:[{text:"Komputer akan berjalan otomatis tanpa henti",correct:!1},{text:"Hardware dan Software tidak dapat berfungsi karena tidak ada yang memberi perintah",correct:!0},{text:"Software akan menghapus dirinya sendiri secara otomatis",correct:!1},{text:"Hardware akan tetap bekerja namun tidak menampilkan apapun",correct:!1}]},{question:"Google Chrome, Microsoft Word, dan Adobe Photoshop adalah contoh dari...",answers:[{text:"Perangkat Keras Tambahan",correct:!1},{text:"Sistem Operasi",correct:!1},{text:"Perangkat Lunak Aplikasi",correct:!0},{text:"Komponen Brainware",correct:!1}]},{question:"Komponen yang dianggap sebagai 'otak' komputer karena bertugas memproses semua perintah adalah...",answers:[{text:"Hard Disk",correct:!1},{text:"Motherboard",correct:!1},{text:"RAM",correct:!1},{text:"CPU",correct:!0}]},{question:"Pernyataan yang paling tepat dalam menggambarkan hubungan antara tiga komponen sistem komputer adalah...",answers:[{text:"Hardware adalah yang terpenting karena tanpa fisik, software tidak ada artinya",correct:!1},{text:"Brainware hanya dibutuhkan di awal, setelah itu komputer berjalan sendiri",correct:!1},{text:"Ketiganya saling bergantung dan tidak dapat berfungsi jika salah satu komponen hilang",correct:!0},{text:"Software dapat menciptakan Hardware baru sesuai kebutuhan",correct:!1}]}];
+        let currentQuestionIndex=0,score=0,userAnswers=[],userData={};
+        const userForm=document.getElementById("user-form"),quizContainer=document.getElementById("quiz-container"),resultContainer=document.getElementById("result-container"),questionElement=document.getElementById("question"),answerButtonsElement=document.getElementById("answer-buttons"),nextButton=document.getElementById("next-btn"),progressText=document.getElementById("progress-text"),scoreText=document.getElementById("score-text"),detailsText=document.getElementById("details-text"),finishButton=document.getElementById("finish-btn"),loadingText=document.getElementById("loading-text");
+        function startQuiz(){const e=document.getElementById("nama").value,t=document.getElementById("kelas").value;""!==e.trim()&&""!==t?(userData={nama:e,kelas:t},userForm.classList.remove("active"),quizContainer.classList.add("active"),showQuestion()):alert("Nama dan Kelas wajib diisi!")}
+        function showQuestion(){resetState();const e=quizData[currentQuestionIndex];questionElement.innerText=e.question,progressText.innerText=`Soal ${currentQuestionIndex+1} dari ${quizData.length}`,e.answers.forEach(e=>{const t=document.createElement("button");t.innerText=e.text,t.classList.add("answer-btn"),e.correct&&(t.dataset.correct=e.correct),t.addEventListener("click",selectAnswer),answerButtonsElement.appendChild(t)}),nextButton.style.display="none"}
+        function resetState(){for(;answerButtonsElement.firstChild;)answerButtonsElement.removeChild(answerButtonsElement.firstChild)}
+        function selectAnswer(e){const t=e.target;Array.from(answerButtonsElement.children).forEach(e=>{e.classList.remove("selected")}),t.classList.add("selected"),nextButton.style.display="block"}
+        function nextQuestion(){const e=document.querySelector(".answer-btn.selected");if(!e)return void alert("Silakan pilih salah satu jawaban!");const t=e.dataset.correct==="true";t&&score++,userAnswers.push(e.innerText),++currentQuestionIndex<quizData.length?showQuestion():showResult()}
+        function showResult(){quizContainer.classList.remove("active"),resultContainer.classList.add("active");const e=score/quizData.length*100;scoreText.innerText=`Skor Anda: ${e.toFixed(0)}`,detailsText.innerText=`Detail: ${score} Benar, ${quizData.length-score} Salah`,submitToGoogleSheet()}
+        function finishQuiz(){resultContainer.classList.remove("active"),userForm.classList.add("active"),currentQuestionIndex=0,score=0,userAnswers=[],document.getElementById("data-form").reset(),finishButton.style.display="none",loadingText.innerText="Pengiriman data... Mohon tunggu."}
+        async function submitToGoogleSheet(){
+            // !!! PASTE URL BARU ANDA DI SINI !!!
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw3Ax6GadaUtsA1UVnIkNZUzybOooUtCHUY7YEsWvdil2hVbanY8V3uza1NssQdGyDZwg/exec";
+            
+            if(SCRIPT_URL==="URL_APPS_SCRIPT_BARU_ANDA"){loadingText.innerText="Error: URL Skrip belum diatur.";return}
+            const e=score/quizData.length*100,t=new FormData;
+            t.append("waktu",(new Date).toLocaleString("id-ID")),t.append("nama",userData.nama),t.append("kelas",userData.kelas),t.append("skor",e.toFixed(0)),t.append("jawabanBenar",score),userAnswers.forEach((e,n)=>{t.append(`jawaban${n+1}`,e)});
+            try{
+                await fetch(SCRIPT_URL,{method:"POST",body:t});
+                loadingText.innerText="Data berhasil terkirim!";
+                console.log("Data berhasil dikirim!");
+            }catch(e){
+                loadingText.innerText="Gagal mengirim data. Cek koneksi internet.";
+                console.error("Error:",e);
+            }finally{
+                finishButton.style.display="block";
+            }
+        }
+    </script>
+</body>
+</html>

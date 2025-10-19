@@ -1,0 +1,37 @@
+// Kode Google Apps Script (Code.gs) - SUDAH DIPERBAIKI
+
+// ID Spreadsheet Anda sudah saya masukkan di sini.
+var SPREADSHEET_ID = "1ysn2J9hiT_EV1LxDWiMskorOwIl0myCFyiFmuYrUROU"; 
+
+// Pastikan nama Sheet Anda adalah "Sheet1".
+var SHEET_NAME = "Sheet1";
+
+// Fungsi ini berjalan saat menerima data dari kuis
+function doPost(e) {
+  try {
+    var doc = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = doc.getSheetByName(SHEET_NAME);
+
+    var waktu = e.parameter.waktu;
+    var nama = e.parameter.nama;
+    var kelas = e.parameter.kelas;
+    var skor = e.parameter.skor;
+    var jawabanBenar = e.parameter.jawabanBenar;
+
+    var rowData = [waktu, nama, kelas, skor, jawabanBenar];
+
+    for (var i = 1; i <= 10; i++) {
+      rowData.push(e.parameter['jawaban' + i] || ""); // Menambah || "" agar tidak error jika jawaban kosong
+    }
+
+    sheet.appendRow(rowData);
+
+    return ContentService.createTextOutput(JSON.stringify({ "result": "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    // Mengembalikan pesan error yang jelas untuk debugging
+    return ContentService.createTextOutput(JSON.stringify({ "result": "error", "error": error.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
